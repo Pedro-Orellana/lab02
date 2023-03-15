@@ -5,7 +5,7 @@ public class Utils {
             "Tell me more about it, what is this \"replace\" you are talking about (problem at work, family problem, a promotion at work, success in school)",
             "Can you tell me more about this replace?",
             "That's great! I am happy for you! is there anything else you want to talk about? (yes, no)",
-            "Oh no, I'm sorry to hear that, but things will eventually get better again!, is there anything else you want to talk about?"
+            "Oh no, I'm sorry to hear that, but things will eventually get better again!, is there anything else you want to talk about? (yes, no)"
     };
 
     public String[] getQuestions() {
