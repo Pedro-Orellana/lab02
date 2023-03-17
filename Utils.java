@@ -8,27 +8,32 @@ public class Utils {
             "Oh no, I'm sorry to hear that, but things will eventually get better again!, is there anything else you want to talk about? (yes, no)"
     };
 
+    private String[] validResponses = {
+        "happy",
+        "sad",
+        "anxious",
+        "excited",
+        "no",
+        "yes",
+        "goodbye",
+        "you don't know",
+        "personal issue",
+        "personal achievement",
+        "something else",
+        "problem at work",
+        "family problem",
+        "promotion at work",
+        "success in school",
+        "you don't know",
+        "personal issue",
+        "personal achievement",
+        "something else"
+};
+
+
     public String[] getQuestions() {
         return questions;
     }
-
-    private String[] answers1 = {
-            "i don't know",
-            "i do not know",
-            "dunno",
-            "personal issue",
-            "personal achievement",
-            "something else"
-    };
-
-    private String[] answers2 = {
-            "problem at work",
-            "family problem",
-            "promotion at work",
-            "success in school"
-    };
-
-    
 
     public String normalizeResponse(String response) {
         //for the purposes of making the program recognize different variations of the same answer
@@ -49,6 +54,32 @@ public class Utils {
             default:
                 return 0;
         }
+    }
+
+    public boolean isValidResponse(String response) {
+        response = normalizeResponse(response);
+        for (String validResponse : validResponses) {
+            if (response.equals(validResponse)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isValidResponseForSecondQuestion(String response) {
+        response = normalizeResponse(response);
+        String[] validResponsesForSecondQuestion = {
+                "you don't know",
+                "personal issue",
+                "personal achievement",
+                "something else"
+        };
+        for (String validResponse : validResponsesForSecondQuestion) {
+            if (response.equals(validResponse)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
