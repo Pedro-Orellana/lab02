@@ -48,7 +48,7 @@ public class Therapist {
         }
         userResponse = therapySession(userResponse);
 
-        Boolean wantsToContinue = checkIfWantsToContinue(userResponse);
+        Boolean wantsToContinue = utils.checkIfWantsToContinue(userResponse);
 
         while (wantsToContinue) {
             System.out.print("What else are you feeling today? (happy, sad, anxious, excited) ");
@@ -63,7 +63,7 @@ public class Therapist {
             }
 
             userResponse = therapySession(userResponse);
-            wantsToContinue = checkIfWantsToContinue(userResponse);
+            wantsToContinue = utils.checkIfWantsToContinue(userResponse);
         }
 
     }
@@ -112,24 +112,13 @@ public class Therapist {
 
             System.out.print(formattedQuestion + " ");
             response = utils.normalizeResponse(scanner.nextLine());
-            boolean responseIsValid = true;
 
-            switch (currentQuestionIndex) {
-                case 0:
-                    responseIsValid = utils.isAnswer0Valid(response);
-                    break;
-                case 1:
-                    responseIsValid = utils.isAnswer1Valid(response);
-                    break;
-                case 3:
-                    responseIsValid = utils.isAnswer3Valid(response);
-                    break;
-                case 5:
-                    responseIsValid = utils.isAnswer5Valid(response);
-                    break;
-            }
+            boolean responseIsValid = utils.validateAnswer(response, currentQuestionIndex);
 
             if (!responseIsValid) {
+                if(response.contains("goodbye")){
+                    break;
+                }
                 System.out.println("Please respond the question with one of the suggested responses");
                 response = lastResponse;
                 continue;
@@ -157,7 +146,7 @@ public class Therapist {
 
             if (currentQuestionIndex == 1) {
                 // know if the follow up question is happy or sad
-                questionsToSkip = utils.getCorrectFollowUpQuestion(response);
+                questionsToSkip = utils.getQuestionsToSkip(response);
             }
 
             if (currentQuestionIndex == 2) {
@@ -167,29 +156,10 @@ public class Therapist {
 
             currentQuestionIndex++;
 
-            if (currentQuestionIndex >= questions.length) {
-                break;
-            }
         }
 
         return response;
 
-    }
-
-    /**
-     * Checks if the user wants to continue the therapy session or end it.
-     *
-     * @param lastResponse a String representing the user's last response to a question
-     * @return true if the user wants to continue, false otherwise
-     */
-
-    public static Boolean checkIfWantsToContinue(String lastResponse) {
-
-        if (lastResponse.equals("no") || lastResponse.equals("goodbye")) {
-            System.out.println("Okay then, this is the end of our session, have a great day!");
-            return false;
-        }
-        return true;
     }
 
 }

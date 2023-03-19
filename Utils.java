@@ -50,7 +50,7 @@ public class Utils {
      * @return true if the response is valid, false otherwise
      */
 
-    public Boolean isInitialQuestionValid(String answer) {
+    public boolean isInitialQuestionValid(String answer) {
         for (String validAnswer : initialAnswers) {
             if (answer.equalsIgnoreCase(validAnswer)) {
                 return true;
@@ -79,7 +79,7 @@ public class Utils {
      * @return true if the response is valid, false otherwise
      */
 
-    public boolean isAnswer0Valid(String answer) {
+    private boolean isAnswer0Valid(String answer) {
         for (String validAnswer : answers0) {
             if (answer.equalsIgnoreCase(validAnswer)) {
                 return true;
@@ -106,7 +106,7 @@ public class Utils {
      * @return true if the response is valid, false otherwise
      */
 
-    public boolean isAnswer1Valid(String answer) {
+    private boolean isAnswer1Valid(String answer) {
         for (String validAnswer : answers1) {
             if (answer.equalsIgnoreCase(validAnswer)) {
                 return true;
@@ -133,7 +133,7 @@ public class Utils {
      * @return true if the response is valid, false otherwise
      */
 
-    public boolean isAnswer3Valid(String answer) {
+    private boolean isAnswer3Valid(String answer) {
         for (String validAnswer : answers3) {
             if (answer.equalsIgnoreCase(validAnswer)) {
                 return true;
@@ -160,13 +160,31 @@ public class Utils {
      * @return true if the response is valid, false otherwise
      */
 
-    public boolean isAnswer5Valid(String answer) {
+    private boolean isAnswer5Valid(String answer) {
         for (String validAnswer : answer5) {
             if (answer.equalsIgnoreCase(validAnswer)) {
                 return true;
             }
         }
         return false;
+    }
+
+
+    public boolean validateAnswer(String answer, int questionIndex) {
+
+        switch (questionIndex) {
+            case 0:
+                return isAnswer0Valid(answer);
+            case 1:
+                return isAnswer1Valid(answer);
+            case 3:
+                return isAnswer3Valid(answer);
+            case 5:
+                return isAnswer5Valid(answer);
+            default:
+            return true;
+
+        }
     }
     
     /**
@@ -205,6 +223,24 @@ public class Utils {
         return false;
     }
 
+
+    /**
+     * Checks if the user wants to continue the therapy session or end it.
+     *
+     * @param lastResponse a String representing the user's last response to a question
+     * @return true if the user wants to continue, false otherwise
+     */
+
+     public boolean checkIfWantsToContinue(String lastResponse) {
+
+        if (lastResponse.equals("no") || lastResponse.contains("goodbye")) {
+            System.out.println("Okay I understand, this is the end of our session, please know that if I can be of any assistance, you can always reach out to me anytime!");
+            return false;
+        }
+        return true;
+    }
+
+
     /**
      * Gets the index of the follow-up question to ask based on the user's response to the second question.
      * 
@@ -212,7 +248,7 @@ public class Utils {
      * @return the index of the follow-up question to ask
      */
 
-    public int getCorrectFollowUpQuestion(String answer) {
+    public int getQuestionsToSkip(String answer) {
 
         switch (answer) {
             case "problem at work":
