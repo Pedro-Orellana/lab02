@@ -11,13 +11,31 @@ public class Therapist {
 
         displayGreeting();
 
-        String response = getInitialResponse();
-        Boolean wantsToContinue = therapySession(response);
+        String userResponse = getInitialResponse();
+        boolean isValid = utils.isInitialQuestionValid(userResponse);
+        while (!isValid) {
+            System.out.println("I am sorry, can you please answer with one of the options?");
+            userResponse = getInitialResponse();
+            isValid = utils.isInitialQuestionValid(userResponse);
+        }
+        userResponse = therapySession(userResponse);
+
+        Boolean wantsToContinue = checkIfWantsToContinue(userResponse);
 
         while (wantsToContinue) {
             System.out.print("What else are you feeling today? (happy, sad, anxious, excited) ");
-            response = utils.normalizeResponse(scanner.nextLine());
-            wantsToContinue = therapySession(response);
+            userResponse = utils.normalizeResponse(scanner.nextLine());
+            isValid = utils.isInitialQuestionValid(userResponse);
+
+            while (!isValid) {
+                System.out.println("I am sorry, can you please answer with one of the options?");
+                System.out.print("What else are you feeling today? (happy, sad, anxious, excited) ");
+                userResponse = utils.normalizeResponse(scanner.nextLine());
+                isValid = utils.isInitialQuestionValid(userResponse);
+            }
+
+            userResponse = therapySession(userResponse);
+            wantsToContinue = checkIfWantsToContinue(userResponse);
         }
 
     }
@@ -28,77 +46,98 @@ public class Therapist {
 
     public static String getInitialResponse() {
         System.out.print("How are you feeling today? (happy, sad, anxious, excited) ");
-        String response = getUserResponse(false);
+        String response = scanner.nextLine();
         return utils.normalizeResponse(response);
     }
 
-    public static Boolean therapySession(String response) {
+    public static String therapySession(String response) {
 
-        int i = 0;
-        int x = 0;
-        while (!response.equals("no") && !response.contains("goodbye")) {
+        int currentQuestionIndex = 0;
+        int questionsToSkip = 0;
+        String mood = response;
+        String lastResponse = response;
 
+        while (!response.contains("goodbye")) {
 
-            String currentQuestion = questions[i].replace("replace", response);
-            System.out.print(currentQuestion + " ");
-            response = getUserResponse(i == 1);
-            if(i == 3 || i == 4) {
-                //the last two questions, can only get a "yes" or a "no" for answer
-                if(!response.equals("yes") && !response.equals("no")) {
-                    System.out.println("Invalid response. Please enter either 'yes' or 'no'.");
-                    continue;
-                } else {
+            String currentQuestion = questions[currentQuestionIndex];
+
+            String formattedQuestion = (currentQuestionIndex == 3 || currentQuestionIndex == 5)
+                    ? currentQuestion.replace("replace", mood)
+                    : currentQuestion.replace("replace", response);
+
+            System.out.print(formattedQuestion + " ");
+            response = utils.normalizeResponse(scanner.nextLine());
+            boolean responseIsValid = true;
+
+            switch (currentQuestionIndex) {
+                case 0:
+                    responseIsValid = utils.isAnswer0Valid(response);
                     break;
-                }        
-            }
-            if(i == 1) {
-                //know if the follow up question is happy or sad
-                x = utils.getCorrectFollowUpQuestion(response);
+                case 1:
+                    responseIsValid = utils.isAnswer1Valid(response);
+                    break;
+                case 3:
+                    responseIsValid = utils.isAnswer3Valid(response);
+                    break;
+                case 5:
+                    responseIsValid = utils.isAnswer5Valid(response);
+                    break;
             }
 
-            if (i == 2) {
-                //skip the happy follow up question if necessary
-                i = i + x;
+            if (!responseIsValid) {
+                System.out.println("Please respond the question with one of the suggested responses");
+                response = lastResponse;
+                continue;
+            } else {
+                lastResponse = response;
             }
-            i++;
 
-            if (i >= questions.length) {
+            if (utils.checkIfUserDontKnow(response)) {
+                System.out.println("I'm sure you know, let's talk about it");
+                response = mood;
+                continue;
+            }
+
+            if (currentQuestionIndex == questions.length - 3 || currentQuestionIndex == questions.length - 1) {
+                // the 2 questions where we need to know if the user wants to keep talking or
+                // not. Can only accept a "yes" or a "no"
+
+                while (!response.equals("yes") && !response.equals("no")) {
+                    System.out.print(
+                            "If you want to talk about something else, please reply with a \"yes\", otherwise please reply with a \"no\" ");
+                    response = utils.normalizeResponse(scanner.nextLine());
+                }
+                break;
+            }
+
+            if (currentQuestionIndex == 1) {
+                // know if the follow up question is happy or sad
+                questionsToSkip = utils.getCorrectFollowUpQuestion(response);
+            }
+
+            if (currentQuestionIndex == 2) {
+                // skip the happy follow up question if necessary
+                currentQuestionIndex += questionsToSkip;
+            }
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex >= questions.length) {
                 break;
             }
         }
-        
-        return checkIfWantsToContinue(response);
+
+        return response;
 
     }
 
-    public static Boolean checkIfWantsToContinue(String response) {
-        while (!response.equals("no") && !response.equals("yes") && !response.equals("goodbye")) {
-            System.out.println("I am sorry, did you want to continue with your session? (yes, no)");
-            response = getUserResponse();
-        }
-    
-        if (response.equals("no") || response.equals("goodbye")) {
+    public static Boolean checkIfWantsToContinue(String lastResponse) {
+
+        if (lastResponse.equals("no") || lastResponse.equals("goodbye")) {
             System.out.println("Okay then, this is the end of our session, have a great day!");
             return false;
-        } else {
-            return true;
         }
-    }
-    
-
-    public static String getUserResponse(boolean forSecondQuestion) {
-        String response = scanner.nextLine();
-        while (!(forSecondQuestion ? utils.isValidResponseForSecondQuestion(response) : isValidResponse(response))) {
-            System.out.println("Invalid response. Please try again.");
-            response = scanner.nextLine();
-        }
-        return response;
-    }
-    
-
-    public static boolean isValidResponse(String response) {
-        response = utils.normalizeResponse(response);
-        return response.equals("happy") || response.equals("sad") || response.equals("anxious") || response.equals("excited") || response.equals("no") || response.equals("yes") || response.equals("goodbye");
+        return true;
     }
 
 }
