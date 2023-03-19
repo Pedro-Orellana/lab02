@@ -1,4 +1,16 @@
+/**
+ * The Utils class provides a collection of utility methods for processing user input during a conversation.
+ * These methods include validating the user's responses to specific questions and normalizing their input to improve accuracy. 
+ * The class also contains an array of pre-defined questions to ask the user during the conversation. 
+ * @author Matt Magnaye and Pedro Orellana  
+ * @since 03/13/2023
+ */
+
 public class Utils {
+
+    /**
+     * An array of questions used to prompt the user during the conversation.
+     */
 
     private String[] questions = {
             "What's making you feel replace today? (you don't know, personal issue, personal achievement, something else?)",
@@ -10,9 +22,19 @@ public class Utils {
             "I understand, feeling replace it's not a nice feeling, but know that life has ups and downs, and this will also pass, stay strong and rely on your family and friends! is there anything else you would like to talk about? (yes, no)"
     };
 
+    /**
+     * Gets the array of questions used to prompt the user.
+     * 
+     * @return the array of questions
+     */
+
     public String[] getQuestions() {
         return questions;
     }
+
+    /**
+     * An array of initial answers used to validate the user's response to the first question.
+     */
 
     private String[] initialAnswers = {
             "happy",
@@ -21,11 +43,25 @@ public class Utils {
             "excited"
     };
 
+    /**
+     * Checks if the user's initial response is valid.
+     * 
+     * @param answer the user's response to the initial question
+     * @return true if the response is valid, false otherwise
+     */
+
     public Boolean isInitialQuestionValid(String answer) {
-        // TODO: loop through the initialAnswers array, and if answer is not in the
-        // array, return false, otherwise return true
-        return true;
+        for (String validAnswer : initialAnswers) {
+            if (answer.equalsIgnoreCase(validAnswer)) {
+                return true;
+            }
+        }
+        return false;
     }
+    
+    /**
+     * An array of valid responses to the second question.
+     */
 
     private String[] answers0 = {
             "I don't know",
@@ -36,11 +72,25 @@ public class Utils {
             "something else"
     };
 
+    /**
+     * Checks if the user's response to the second question is valid.
+     * 
+     * @param answer the user's response to the second question
+     * @return true if the response is valid, false otherwise
+     */
+
     public boolean isAnswer0Valid(String answer) {
-        // TODO: loop through the answers1 array, and if the answer is none of the
-        // answers in the array, return false, otherwise return true
-        return true;
+        for (String validAnswer : answers0) {
+            if (answer.equalsIgnoreCase(validAnswer)) {
+                return true;
+            }
+        }
+        return false;
     }
+    
+    /**
+     * An array of valid responses to the third question.
+     */
 
     private String[] answers1 = {
             "problem at work",
@@ -49,10 +99,25 @@ public class Utils {
             "success in school"
     };
 
+    /**
+     * Checks if the user's response to the third question is valid.
+     * 
+     * @param answer the user's response to the third question
+     * @return true if the response is valid, false otherwise
+     */
+
     public boolean isAnswer1Valid(String answer) {
-        // TODO: same as previous method but for anwers2 array
-        return true;
+        for (String validAnswer : answers1) {
+            if (answer.equalsIgnoreCase(validAnswer)) {
+                return true;
+            }
+        }
+        return false;
     }
+    
+    /**
+     * An array of valid responses to the fourth question.
+     */
 
     private String[] answers3 = {
             "joyful",
@@ -61,10 +126,25 @@ public class Utils {
             "motivated"
     };
 
+    /**
+     * Checks if the user's response to the fourth question is valid.
+     * 
+     * @param answer the user's response to the fourth question
+     * @return true if the response is valid, false otherwise
+     */
+
     public boolean isAnswer3Valid(String answer) {
-        // TODO: please finish this method
-        return true;
+        for (String validAnswer : answers3) {
+            if (answer.equalsIgnoreCase(validAnswer)) {
+                return true;
+            }
+        }
+        return false;
     }
+    
+    /**
+     * An array of valid responses to the fifth question.
+     */
 
     private String[] answer5 = {
             "anxious",
@@ -73,10 +153,28 @@ public class Utils {
             "burned out"
     };
 
+    /**
+     * Checks if the user's response to the fifth question is valid.
+     * 
+     * @param answer the user's response to the fifth question
+     * @return true if the response is valid, false otherwise
+     */
+
     public boolean isAnswer5Valid(String answer) {
-        // TODO: please finish this method
-        return true;
+        for (String validAnswer : answer5) {
+            if (answer.equalsIgnoreCase(validAnswer)) {
+                return true;
+            }
+        }
+        return false;
     }
+    
+    /**
+     * Normalizes the user's response by converting it to lowercase and trimming whitespace.
+     * 
+     * @param response the user's response to normalize
+     * @return the normalized response
+     */
 
     public String normalizeResponse(String response) {
         // for the purposes of making the program recognize different variations of the
@@ -91,6 +189,13 @@ public class Utils {
 
     }
 
+    /**
+     * Checks if the user's response indicates that they do not know the answer.
+     * 
+     * @param response the user's response to check
+     * @return true if the response indicates that the user does not know the answer, false otherwise
+     */
+
     public Boolean checkIfUserDontKnow(String response) {
         if (response.equals("I don't know") || response.equals("dunno")
                 || response.equals("i don't know") || response.equals("i dont know")
@@ -99,6 +204,13 @@ public class Utils {
         }
         return false;
     }
+
+    /**
+     * Gets the index of the follow-up question to ask based on the user's response to the second question.
+     * 
+     * @param answer the user's response to the second question
+     * @return the index of the follow-up question to ask
+     */
 
     public int getCorrectFollowUpQuestion(String answer) {
 
