@@ -1,14 +1,19 @@
 import java.util.Scanner;
 
 /**
- * The Therapist class (Dr. Starks) simulates a conversation with a user to provide therapy. 
- * The class prompts the user for their emotional state and responds with a series of follow-up questions based on the user's responses. 
- * The class uses an instance of the Utils class to validate user input and normalize responses. 
+ * The Therapist class (Dr. Starks) simulates a conversation with a user to
+ * provide therapy.
+ * Dr. Starks gets his name from "The Analyst", a novel by John Katzenbach.
+ * The class prompts the user for their emotional state and responds with a
+ * series of follow-up questions based on the user's responses.
+ * The class uses an instance of the Utils class to validate user input and
+ * normalize responses.
+ * 
  * @author Matt Magnaye and Pedro Orellana
  * @since 03/13/2023
  */
 
-public class Therapist {
+public class DrStarks {
 
     /**
      * Scanner object for reading user input
@@ -16,8 +21,9 @@ public class Therapist {
 
     public static Scanner scanner = new Scanner(System.in);
 
-     /**
-     * An instance of the Utils class for validating user input and normalizing responses
+    /**
+     * An instance of the Utils class for validating user input and normalizing
+     * responses
      */
 
     public static Utils utils = new Utils();
@@ -29,20 +35,21 @@ public class Therapist {
     public static String[] questions = utils.getQuestions();
 
     /**
-     * The main method for the Therapist program. Displays a greeting message, prompts the user for their emotional state, and begins the therapy session.
+     * The main method for the Therapist program. Displays a greeting message,
+     * prompts the user for their emotional state, and begins the therapy session.
      *
      * @param args the command-line arguments for the program (not used)
      */
 
-    
     public static void main(String[] args) {
 
         displayGreeting();
 
         String userResponse = getInitialResponse();
         boolean isValid = utils.isInitialQuestionValid(userResponse);
+
         while (!isValid) {
-            System.out.println("I am sorry, can you please answer with one of the options?");
+            System.out.println("Dr. Starks: I am sorry, can you please answer with one of the options?");
             userResponse = getInitialResponse();
             isValid = utils.isInitialQuestionValid(userResponse);
         }
@@ -51,13 +58,14 @@ public class Therapist {
         Boolean wantsToContinue = utils.checkIfWantsToContinue(userResponse);
 
         while (wantsToContinue) {
-            System.out.print("What else are you feeling today? (happy, sad, anxious, excited) ");
+            System.out.println("Dr. Starks: What else are you feeling today? (happy, sad, anxious, excited) ");
+            System.out.print("you: ");
             userResponse = utils.normalizeResponse(scanner.nextLine());
             isValid = utils.isInitialQuestionValid(userResponse);
 
             while (!isValid) {
-                System.out.println("I am sorry, can you please answer with one of the options?");
-                System.out.print("What else are you feeling today? (happy, sad, anxious, excited) ");
+                System.out.println("Dr. Starks: I am sorry, can you please answer with one of the options?");
+                System.out.print("Dr. Starks: What else are you feeling today? (happy, sad, anxious, excited) ");
                 userResponse = utils.normalizeResponse(scanner.nextLine());
                 isValid = utils.isInitialQuestionValid(userResponse);
             }
@@ -73,7 +81,10 @@ public class Therapist {
      */
 
     public static void displayGreeting() {
-        System.out.println("Hello! This is Dr. Starks and we are going to start our session today.");
+        System.out.println();
+        System.out.println("Dr. Starks:  Greetings, my name is Dr. Frederick Starks, it is nice to meet you!");
+        System.out.printf("%82s", "Thank you for joining me here today, let's begin our virtual session\n");
+        System.out.println();
     }
 
     /**
@@ -83,16 +94,21 @@ public class Therapist {
      */
 
     public static String getInitialResponse() {
-        System.out.print("How are you feeling today? (happy, sad, anxious, excited) ");
+        System.out.println();
+        System.out.println("Dr. Starks:  How are you feeling today? (happy, sad, anxious, excited) ");
+        System.out.print("you: ");
         String response = scanner.nextLine();
         return utils.normalizeResponse(response);
     }
 
     /**
-     * Handles the main logic for the therapy session. Asks the user a series of follow-up questions based on their response to the initial question.
+     * Handles the main logic for the therapy session. Asks the user a series of
+     * follow-up questions based on their response to the initial question.
      *
-     * @param response a String representing the user's response to the initial question
-     * @return a String representing the user's final response to the session (e.g., "goodbye")
+     * @param response a String representing the user's response to the initial
+     *                 question
+     * @return a String representing the user's final response to the session (e.g.,
+     *         "goodbye")
      */
 
     public static String therapySession(String response) {
@@ -110,16 +126,18 @@ public class Therapist {
                     ? currentQuestion.replace("replace", mood)
                     : currentQuestion.replace("replace", response);
 
-            System.out.print(formattedQuestion + " ");
+            System.out.println("Dr. Starks: " + formattedQuestion + " ");
+            System.out.print("you: ");
             response = utils.normalizeResponse(scanner.nextLine());
 
             boolean responseIsValid = utils.validateAnswer(response, currentQuestionIndex);
 
             if (!responseIsValid) {
-                if(response.contains("goodbye")){
+                if (response.contains("goodbye")) {
                     break;
                 }
-                System.out.println("Please respond the question with one of the suggested responses");
+                System.out.println();
+                System.out.println("Dr.Starks: Please respond the question with one of the suggested responses");
                 response = lastResponse;
                 continue;
             } else {
@@ -127,7 +145,8 @@ public class Therapist {
             }
 
             if (utils.checkIfUserDontKnow(response)) {
-                System.out.println("I'm sure you know, let's talk about it");
+                System.out.println();
+                System.out.println("Dr. Starks: I'm sure you know, let's talk about it");
                 response = mood;
                 continue;
             }
@@ -138,7 +157,7 @@ public class Therapist {
 
                 while (!response.equals("yes") && !response.equals("no")) {
                     System.out.print(
-                            "If you want to talk about something else, please reply with a \"yes\", otherwise please reply with a \"no\" ");
+                            "Dr. Starks: If you want to talk about something else, please reply with a \"yes\", otherwise please reply with a \"no\" ");
                     response = utils.normalizeResponse(scanner.nextLine());
                 }
                 break;
