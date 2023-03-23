@@ -17,7 +17,7 @@ public class Utils {
      */
 
     private String[] questions = {
-            "What's making you feel replace today? (you don't know, personal issue, personal achievement, something else?)",
+            "What's making you feel replace today? (I don't know, personal issue, personal achievement, something else?)",
             "Tell me more about it, what is this \"replace\" you are talking about (problem at work, family problem, promotion at work, success in school)",
             "Can you tell me more about this replace?",
             "That's great! I am happy for you! and besides replace, how else is this making you feel? (joyful, hopeful for the future, grateful to life, motivated)",
